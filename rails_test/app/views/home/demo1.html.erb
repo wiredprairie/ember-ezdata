@@ -1,0 +1,58 @@
+<h1>demo</h1>
+
+<script type="text/x-handlebars" data-template-name="gifts">
+    <h1>{{ giftReason }}</h1>
+    <table>
+        <thead>
+        <tr>
+            <td>Description</td>
+            <td>Thrill</td>
+            <td>From</td>
+        </tr>
+        </thead>
+        {{#each gifts}}
+        <tr>
+            <td>
+                {{ name }}
+            </td>
+            <td>
+                {{ excitement }}
+            </td>
+            <td>
+                {{ from.fullName }}
+            </td>
+        </tr>
+        {{/each}}
+    </table>
+
+    <h1>Filtered</h1>
+    <table>
+        <thead>
+        <tr>
+            <td>Description</td>
+            <td>Thrill</td>
+            <td>From</td>
+        </tr>
+        </thead>
+        {{#each giftsFiltered}}
+        <tr>
+            <td>
+                {{ name }}
+            </td>
+            <td>
+                {{ excitement }}
+            </td>
+            <td>
+                {{ from.fullName }}
+            </td>
+        </tr>
+        {{/each}}
+    </table>
+
+
+</script>
+
+
+<%= javascript_include_tag "ember/ember-0.9.3.js"  %>
+<%= javascript_include_tag "ember-ezdata/ember-ezdata.js"  %>
+<%= javascript_include_tag "home/demo1-app"  %>
