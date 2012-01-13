@@ -75,6 +75,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
             //this.get('data').addObject(obj);
             this.get('_data')[id] = obj;
             this.get('keys').add(id);// = obj;
+            return obj;
         },
 
         remove:function (obj) {
@@ -89,6 +90,29 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
             delete data[id];
             var keys = this.get('keys');
             keys.remove(id);
+            return obj;
+        },
+
+        bulkLoad:function(data, type) {
+            if (!type || !data) { throw new Error("Need data and a type when bulk data loading.");}
+
+            var counter = 0;
+            var len = data.length;
+            if (len) {
+                for(;len--;) {
+                    if (!this.add(type.create.call(type, data[len]))) {
+                        counter ++;
+                    }
+                }
+            } else {
+                if (data.id) {
+                    if (!this.add(type.create.call(type, data))) {
+                        counter = 1;
+                    }
+                }
+            }
+
+            return counter;
         },
 
 
@@ -201,6 +225,11 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
     _stores.get = function (name) {
         return _stores[_stores._retrieveName(name)];
+    };
+
+    _stores.bulkLoad = function(name, data) {
+        var store = _stores[_stores._retrieveName(name)];
+        return store.bulkLoad(data, name);
     };
 
     _stores._retrieveName = function (obj) {

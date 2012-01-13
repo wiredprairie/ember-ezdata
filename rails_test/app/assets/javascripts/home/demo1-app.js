@@ -8,13 +8,13 @@ window.DemoApp = DemoApp;
  */
 
 DemoApp.Person = Entity.define(Entity, "Person", {
-    firstName:String,
-    lastName:String,
-    DOB:Date,
+    first_name:String,
+    last_name:String,
+    date_of_birth:Date,
 
     fullName:function () {
-        return this.get('lastName') + ", " + this.get('firstName');
-    }.property('firstName', 'lastName')
+        return this.get('last_name') + ", " + this.get('first_name');
+    }.property('first_name', 'last_name')
 });
 
 DemoApp.Gift = Entity.define(Entity, "Gift", {
@@ -28,32 +28,37 @@ function createSamplePersons() {
     var personsDS = Entity.Stores.get(DemoApp.Person);
     var p1 = DemoApp.Person.create({
         id:123,
-        firstName:"Aaron",
-        lastName:"Bourne",
-        DOB:new Date()
+        first_name:"Aaron",
+        last_name:"Bourne",
+        date_of_birth:new Date()
     });
     personsDS.add(p1);
     var serialized = p1.serialize();
     personsDS.add(DemoApp.Person.create({
         id:234,
-        firstName:"Bonnie",
-        lastName:"Highways"
+        first_name:"Bonnie",
+        last_name:"Highways"
     })
     );
     personsDS.add(DemoApp.Person.create({
         id:345,
-        firstName:"Daddy",
-        lastName:"Peacebucks"
+        first_name:"Daddy",
+        last_name:"Peacebucks"
     })
     );
     personsDS.add(DemoApp.Person.create({
         id:456,
-        firstName:"Cotton",
-        lastName:"Kandi"
+        first_name:"Cotton",
+        last_name:"Kandi"
     })
     );
 }
 createSamplePersons();
+
+function loadPeople(data){
+    Entity.Stores.get(DemoApp.Person).bulkLoad(data, DemoApp.Person);
+}
+
 
 DemoApp.mainController = Ember.Object.create({
     gifts:null,
@@ -82,7 +87,7 @@ var giftsView = Ember.View.create({
 
 $(function () {
     var moreGifts = [
-        { name:'Book', excitement:'3', fromPersonId:123 },
+        { name:'Book', excitement:'3', fromPersonId:3 },
         { name:'Shirt', excitement:'1', fromPersonId:234},
         { name:'Game System', excitement:'5', fromPersonId:123},
         { name:'Movie', excitement:'4', fromPersonId:345},
@@ -99,6 +104,15 @@ $(function () {
     ];
 
     var moreGiftsIndex = moreGifts.length;
+
+    $.ajax("/person/index", {
+       dataType : 'json',
+       success: function(data, textStatus, jqXHR) {
+           debugger;
+           loadPeople(data);
+       }
+
+    });
 
     function addMoreGifts() {
         moreGiftsIndex--;

@@ -1678,9 +1678,9 @@ Ember.K = function() { return this; };
 
       // pass a function.  If the function returns false the assertion fails
       // any other return value (including void) will pass.
-      ember_assert('a passed record must have a firstName', function() {
+      ember_assert('a passed record must have a first_name', function() {
         if (obj instanceof Ember.Record) {
-          return !Ember.empty(obj.firstName);
+          return !Ember.empty(obj.first_name);
         }
       });
       
@@ -3122,7 +3122,7 @@ function hasDesc(descs, keyName) {
   ## Examples
 
       // ES5 compatible mode
-      Ember.defineProperty(contact, 'firstName', {
+      Ember.defineProperty(contact, 'first_name', {
         writable: true,
         configurable: false,
         enumerable: true,
@@ -3130,12 +3130,12 @@ function hasDesc(descs, keyName) {
       });
       
       // define a simple property
-      Ember.defineProperty(contact, 'lastName', Ember.SIMPLE_PROPERTY, 'Jolley');
+      Ember.defineProperty(contact, 'last_name', Ember.SIMPLE_PROPERTY, 'Jolley');
       
       // define a computed property
       Ember.defineProperty(contact, 'fullName', Ember.computed(function() {
-        return this.firstName+' '+this.lastName;
-      }).property('firstName', 'lastName').cacheable());
+        return this.first_name+' '+this.last_name;
+      }).property('first_name', 'last_name').cacheable());
 */
 Ember.defineProperty = function(obj, keyName, desc, val) {
   var m = meta(obj, false), descs = m.descs, watching = m.watching[keyName]>0;
@@ -7605,8 +7605,8 @@ Ember.Observable = Ember.Mixin.create(/** @scope Ember.Observable.prototype */ {
     declared at the end, such as:
 
           fullName: function() {
-            return this.getEach('firstName', 'lastName').compact().join(' ');
-          }.property('firstName', 'lastName')
+            return this.getEach('first_name', 'last_name').compact().join(' ');
+          }.property('first_name', 'last_name')
 
     When you call get() on a computed property, the property function will be
     called and the return value will be returned instead of the function
@@ -7631,7 +7631,7 @@ Ember.Observable = Ember.Mixin.create(/** @scope Ember.Observable.prototype */ {
     To get multiple properties at once, call getProperties
     with a list of strings:
 
-          record.getProperties('firstName', 'lastName', 'zipCode');
+          record.getProperties('first_name', 'last_name', 'zipCode');
 
     @param {String...} list of keys to get
     @returns {Hash}
@@ -7683,7 +7683,7 @@ Ember.Observable = Ember.Mixin.create(/** @scope Ember.Observable.prototype */ {
     In addition to property changes, set() returns the value of the object
     itself so you can do chaining like this:
 
-          record.set('firstName', 'Charles').set('lastName', 'Jolley');
+          record.set('first_name', 'Charles').set('last_name', 'Jolley');
 
     @param {String} key The property to set
     @param {Object} value The value to set or null.
@@ -7698,7 +7698,7 @@ Ember.Observable = Ember.Mixin.create(/** @scope Ember.Observable.prototype */ {
     To set multiple properties at once, call setProperties
     with a Hash:
 
-          record.setProperties({ firstName: 'Charles', lastName: 'Jolley' });
+          record.setProperties({ first_name: 'Charles', last_name: 'Jolley' });
 
     @param {Hash} hash the hash of keys and values to set
     @returns {Ember.Observable}
@@ -8781,22 +8781,22 @@ var get = Ember.get, set = Ember.set;
 
         Contact = Ember.Object.extend(Ember.Freezable, {
 
-          firstName: null,
+          first_name: null,
 
-          lastName: null,
+          last_name: null,
 
           // swaps the names
           swapNames: function() {
             if (this.get('isFrozen')) throw Ember.FROZEN_ERROR;
-            var tmp = this.get('firstName');
-            this.set('firstName', this.get('lastName'));
-            this.set('lastName', tmp);
+            var tmp = this.get('first_name');
+            this.set('first_name', this.get('last_name'));
+            this.set('last_name', tmp);
             return this;
           }
 
         });
 
-        c = Context.create({ firstName: "John", lastName: "Doe" });
+        c = Context.create({ first_name: "John", last_name: "Doe" });
         c.swapNames();  => returns c
         c.freeze();
         c.swapNames();  => EXCEPTION
@@ -9380,7 +9380,7 @@ Ember.ArrayProxy = Ember.Object.extend(Ember.MutableArray, {
   Then, create a view that binds to your new controller:
 
     {{collection contentBinding="MyApp.listController"}}
-      {{content.firstName}} {{content.lastName}}
+      {{content.first_name}} {{content.last_name}}
     {{/collection}}
 
   The advantage of using an array controller is that you only have to set up
