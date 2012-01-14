@@ -94,6 +94,10 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         },
 
         bulkLoad:function(data, type) {
+            if (!type) {
+                // grab type from the store (if it's there)
+                type = this.__type;
+            }
             if (!type || !data) { throw new Error("Need data and a type when bulk data loading.");}
 
             var counter = 0;
@@ -213,6 +217,10 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 
     _stores.create = function (name, options) {
+        var type = null;
+        if (typeof name !== 'string') {
+            type = name;
+        }
         name = _stores._retrieveName(name);
         var s = Store.create({
             _data:{},
@@ -220,6 +228,16 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         });
         s.set('keys', Ember.Set.create({}));
         _stores[name] = s;
+
+        options = options || {};
+
+        // optionally place the data store directly
+        // on the type (if it's a type and they
+        // didn't turn OFF the feature of course)
+        if (type && !options.nostore) {
+            type.store = s;
+            s.__type = type;
+        }
         return s;
     };
 
@@ -352,7 +370,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
         addDefinitionTableEntryFn(NewClass, name, null);
 
-        _stores.create(name);
+        _stores.create(NewClass);
 
         return NewClass;
     };

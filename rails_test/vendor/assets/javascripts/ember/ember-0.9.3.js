@@ -3133,7 +3133,7 @@ function hasDesc(descs, keyName) {
       Ember.defineProperty(contact, 'last_name', Ember.SIMPLE_PROPERTY, 'Jolley');
       
       // define a computed property
-      Ember.defineProperty(contact, 'fullName', Ember.computed(function() {
+      Ember.defineProperty(contact, 'full_name', Ember.computed(function() {
         return this.first_name+' '+this.last_name;
       }).property('first_name', 'last_name').cacheable());
 */
@@ -7604,7 +7604,7 @@ Ember.Observable = Ember.Mixin.create(/** @scope Ember.Observable.prototype */ {
     Computed properties are methods defined with the property() modifier
     declared at the end, such as:
 
-          fullName: function() {
+          full_name: function() {
             return this.getEach('first_name', 'last_name').compact().join(' ');
           }.property('first_name', 'last_name')
 

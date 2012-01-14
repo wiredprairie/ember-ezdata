@@ -12,51 +12,21 @@ DemoApp.Person = Entity.define(Entity, "Person", {
     last_name:String,
     date_of_birth:Date,
 
-    fullName:function () {
+    full_name:function () {
         return this.get('last_name') + ", " + this.get('first_name');
     }.property('first_name', 'last_name')
 });
 
+// create the "GIFT" entity class
 DemoApp.Gift = Entity.define(Entity, "Gift", {
     from:DemoApp.Person
 });
 
-
-
-/* now create some sample people */
-function createSamplePersons() {
-    var personsDS = Entity.Stores.get(DemoApp.Person);
-    var p1 = DemoApp.Person.create({
-        id:123,
-        first_name:"Aaron",
-        last_name:"Bourne",
-        date_of_birth:new Date()
-    });
-    personsDS.add(p1);
-    var serialized = p1.serialize();
-    personsDS.add(DemoApp.Person.create({
-        id:234,
-        first_name:"Bonnie",
-        last_name:"Highways"
-    })
-    );
-    personsDS.add(DemoApp.Person.create({
-        id:345,
-        first_name:"Daddy",
-        last_name:"Peacebucks"
-    })
-    );
-    personsDS.add(DemoApp.Person.create({
-        id:456,
-        first_name:"Cotton",
-        last_name:"Kandi"
-    })
-    );
-}
-createSamplePersons();
-
 function loadPeople(data){
-    Entity.Stores.get(DemoApp.Person).bulkLoad(data, DemoApp.Person);
+    // use the shortcut method to loading data (just saves a line)
+
+    DemoApp.Person.store.bulkLoad(data);
+    //Entity.Stores.bulkLoad(DemoApp.Person, );
 }
 
 
@@ -88,19 +58,19 @@ var giftsView = Ember.View.create({
 $(function () {
     var moreGifts = [
         { name:'Book', excitement:'3', fromPersonId:3 },
-        { name:'Shirt', excitement:'1', fromPersonId:234},
-        { name:'Game System', excitement:'5', fromPersonId:123},
-        { name:'Movie', excitement:'4', fromPersonId:345},
-        { name:'Gift Card', excitement:'3', fromPersonId:123},
-        { name:'MP3 Player', excitement:'3', fromPersonId:456},
-        { name:'Tie', excitement:'1', fromPersonId:456},
-        { name:'Candy', excitement:'3', fromPersonId:234},
-        { name:'Coffee', excitement:'3', fromPersonId:123},
-        { name:'Blanket', excitement:'2', fromPersonId:456},
-        { name:'Camera', excitement:'4', fromPersonId:234},
-        { name:'Phone', excitement:'5', fromPersonId:234},
-        { name:'Socks', excitement:'1', fromPersonId:123},
-        { name:'Game', excitement:'5', fromPersonId:456}
+        { name:'Shirt', excitement:'1', fromPersonId:1},
+        { name:'Game System', excitement:'5', fromPersonId:2},
+        { name:'Movie', excitement:'4', fromPersonId:3},
+        { name:'Gift Card', excitement:'3', fromPersonId:3},
+        { name:'MP3 Player', excitement:'3', fromPersonId:2},
+        { name:'Tie', excitement:'1', fromPersonId:4},
+        { name:'Candy', excitement:'3', fromPersonId:3},
+        { name:'Coffee', excitement:'3', fromPersonId:4},
+        { name:'Blanket', excitement:'2', fromPersonId:2},
+        { name:'Camera', excitement:'4', fromPersonId:1},
+        { name:'Phone', excitement:'5', fromPersonId:2},
+        { name:'Socks', excitement:'1', fromPersonId:3},
+        { name:'Game', excitement:'5', fromPersonId:3}
     ];
 
     var moreGiftsIndex = moreGifts.length;
@@ -108,8 +78,8 @@ $(function () {
     $.ajax("/person/index", {
        dataType : 'json',
        success: function(data, textStatus, jqXHR) {
-           debugger;
            loadPeople(data);
+           addMoreGifts();
        }
 
     });
@@ -123,5 +93,4 @@ $(function () {
     }
 
     giftsView.append();
-    addMoreGifts();
 });
