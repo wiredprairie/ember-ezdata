@@ -1,58 +1,80 @@
 <h1>demo</h1>
 
 <script type="text/x-handlebars" data-template-name="gifts">
-    <h1>{{ giftReason }}</h1>
-    <table>
-        <thead>
-        <tr>
-            <td>Description</td>
-            <td>Thrill</td>
-            <td>From</td>
-        </tr>
-        </thead>
-        {{#each gifts}}
-        <tr>
-            <td>
-                {{ name }}
-            </td>
-            <td>
-                {{ excitement }}
-            </td>
-            <td>
-                {{ from.full_name }}
-            </td>
-        </tr>
-        {{/each}}
-    </table>
+  <h1>Demo 1</h1>
 
-    <h1>Filtered</h1>
-    <table>
-        <thead>
-        <tr>
-            <td>Description</td>
-            <td>Thrill</td>
-            <td>From</td>
-        </tr>
-        </thead>
-        {{#each giftsFiltered}}
-        <tr>
-            <td>
-                {{ name }}
-            </td>
-            <td>
-                {{ excitement }}
-            </td>
-            <td>
-                {{ from.full_name  }}
-            </td>
-        </tr>
-        {{/each}}
-    </table>
+  <h2></h2>
+  <table>
+    <thead>
+    <tr>
+      <td>First</td>
+      <td>Last</td>
+      <td>Id</td>
+    </tr>
+    </thead>
+    {{#each people}}
+    <tr>
+      <td>
+        {{ full_name }}
+      </td>
+      <td>
+        {{ last_name }}
+      </td>
+    </tr>
+    {{/each}}
+  </table>
 
 
+  <h2>{{ giftReason }}</h2>
+  <table>
+    <thead>
+    <tr>
+      <td>Description</td>
+      <td>Thrill</td>
+      <td>From</td>
+    </tr>
+    </thead>
+    {{#each gifts}}
+    <tr>
+      <td>
+        {{ name }}
+      </td>
+      <td>
+        {{ excitement }}
+      </td>
+      <td>
+        {{ from.full_name }}
+      </td>
+    </tr>
+    {{/each}}
+  </table>
+
+  <h2>Filtered</h2>
+  <table>
+    <thead>
+    <tr>
+      <td>Description</td>
+      <td>Thrill</td>
+      <td>From</td>
+    </tr>
+    </thead>
+    {{#each giftsFiltered}}
+    <tr>
+      <td>
+        {{ name }}
+      </td>
+      <td>
+        {{ excitement }}
+      </td>
+      <td>
+        {{ from.full_name }}
+      </td>
+    </tr>
+    {{/each}}
+  </table>
 </script>
 
 
-<%= javascript_include_tag "ember/ember-0.9.3.js"  %>
-<%= javascript_include_tag "ember-ezdata/ember-ezdata.js"  %>
-<%= javascript_include_tag "home/demo1-app"  %>
+<%= javascript_include_tag "ember/ember-0.9.3.js" %>
+<%= javascript_include_tag "ember-ezdata/ember-ezdata.js" %>
+<%= javascript_include_tag "home/demo1-app" %>

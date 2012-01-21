@@ -100,11 +100,25 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
             }
             if (!type || !data) { throw new Error("Need data and a type when bulk data loading.");}
 
+            var keys = this.get('keys');
+            var allData = this.get('_data');
+            var item;
             var counter = 0;
             var len = data.length;
             if (len) {
                 for(;len--;) {
-                    if (!this.add(type.create.call(type, data[len]))) {
+                    item = data[len];
+                    // if there already is something, we'll just copy the data ...
+                    if (typeof item.id !=='undefined' && keys.contains(item.id) === true) {
+                        // is there something existing with that id?
+                        var existing = allData[item.id];
+                        if (existing) {
+                            // check! there was, just grab the data and be done ...
+                            for(var p in item) {
+                                existing.set(p, item[p]);
+                            }
+                        }
+                    } else if (!this.add(type.create.call(type, item))) {
                         counter ++;
                     }
                 }
@@ -120,15 +134,26 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         },
 
 
-        find:function (id) {
+        find:function (id, options) {
             if (!id) {
                 return;
             }
-            return this.get('_data')[id];
+            var item = this.get('_data')[id];
+
+            options = options || {};
+            // if we can't find the record by id, we'll pre-create a stub
+            if (!item && !options.nocreate) {
+                var type = this.__type;
+                if (type) {
+                    item = type.store.add(type.create.call(type, { id: id }));
+//                    item.set('first_name', "testfirst");
+//                    item.set('last_name', 'testlast');
+                }
+            }
+            return item;
         },
 
         live:function (predicateFn) {
-
             var liveArray;
             var content = [];
             liveArray = LiveArray.create(/* Ember.EnumerableObserver, */ {
@@ -151,7 +176,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
                         var addedLen = added.length;
                         for(idx = 0; idx < addedLen; idx++) {
                             id = added[idx];    // get the id
-                            obj = store.find(id);   // translate it into a real object
+                            obj = store.find(id, {nocreate: true});   // translate it into a real object
                             // if they've got a predicate defined, call it
                             if (predicateFn) {
                                 var result = predicateFn.call(obj)

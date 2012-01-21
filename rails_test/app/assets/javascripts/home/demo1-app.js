@@ -22,17 +22,11 @@ DemoApp.Gift = Entity.define(Entity, "Gift", {
     from:DemoApp.Person
 });
 
-function loadPeople(data){
-    // use the shortcut method to loading data (just saves a line)
-
-    DemoApp.Person.store.bulkLoad(data);
-    //Entity.Stores.bulkLoad(DemoApp.Person, );
-}
-
 
 DemoApp.mainController = Ember.Object.create({
     gifts:null,
     giftsFiltered:null,
+    people:null,
     newGift:function (details) {
         var gift = DemoApp.Gift.create(details);
         Entity.Stores.get(DemoApp.Gift).add(gift);
@@ -40,8 +34,11 @@ DemoApp.mainController = Ember.Object.create({
     }
 });
 
+
 // create some "live" connections to the data store
 DemoApp.mainController.set('gifts', Entity.Stores.get(DemoApp.Gift).live());
+DemoApp.mainController.set('people', Entity.Stores.get(DemoApp.Person).live());
+
 // create a live connection with a filter (returns true if it contains the letter 'o')
 DemoApp.mainController.set('giftsFiltered', Entity.Stores.get(DemoApp.Gift).live(
     function () {
@@ -73,24 +70,32 @@ $(function () {
         { name:'Game', excitement:'5', fromPersonId:3}
     ];
 
-    var moreGiftsIndex = moreGifts.length;
+    giftsView.append();
 
-    $.ajax("/person/index", {
-       dataType : 'json',
-       success: function(data, textStatus, jqXHR) {
-           loadPeople(data);
-           addMoreGifts();
-       }
+    addMoreGifts();
+    setTimeout(loadPeopleAsync, 2500);
 
-    });
 
-    function addMoreGifts() {
-        moreGiftsIndex--;
-        if (moreGiftsIndex >= 0) {
-            DemoApp.mainController.newGift(moreGifts[moreGiftsIndex]);
-        }
-        setTimeout(addMoreGifts, 750);
+    function loadPeople(data){
+       // use the shortcut method to loading data (just saves a line)
+       DemoApp.Person.store.bulkLoad(data);
     }
 
-    giftsView.append();
+    function loadPeopleAsync() {
+        $.ajax("/person/index", {
+           dataType : 'json',
+           success: function(data, textStatus, jqXHR) {
+               loadPeople(data);
+           }
+        });
+    }
+
+
+    function addMoreGifts() {
+        var moreGiftsIndex = moreGifts.length;
+        while(moreGiftsIndex--) {
+            DemoApp.mainController.newGift(moreGifts[moreGiftsIndex]);
+        }
+    }
+
 });
