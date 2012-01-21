@@ -47,6 +47,7 @@ DemoApp.mainController.set('giftsFiltered', Entity.Stores.get(DemoApp.Gift).live
 
 var giftsView = Ember.View.create({
     templateName:'gifts',
+    peopleBinding:'DemoApp.mainController.people',
     giftsBinding:'DemoApp.mainController.gifts',
     giftsFilteredBinding:'DemoApp.mainController.giftsFiltered',
     giftReason:'Birthday 2011'
